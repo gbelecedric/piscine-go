@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main {
-      fmt.Println(abcdefghijklmnopqrstuvwxyz)
+func main() {
+      fmt.Println("abcdefghijklmnopqrstuvwxyz")
 }
 
