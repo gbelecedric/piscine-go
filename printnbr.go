@@ -1,69 +1,61 @@
 package piscine
 
-import "github.com/01-edu/z01"
+import "fmt"
+import "strconv"
 
-func print(i int) {
-	z01.PrintRune(rune(i) + '0')
-}
-
-func show(n int, tab [9]int, max [9]int) {
-	i := 0
-	for i < n {
-		print(tab[i])
-		i++
-	}
-	if tab[0] != max[0] {
-		z01.PrintRune(',')
-		z01.PrintRune(' ')
-	}
-}
-
-func combinaison1() {
-	tab := [9]int{0}
-	max := [9]int{9}
-	for tab[0] <= max[0] {
-		show(1, tab, max)
-		tab[0]++
-	}
-}
-
-func PrintCombN(n int) {
-	tab := [9]int{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	max := [9]int{}
-
-	if n == 1 {
-		combinaison1()
-	} else {
-		i := n - 1
-		j := 9
-		for i >= 0 {
-			i--
-			j--
-			max[i] = j
+func PrintNbrBase(n int,base string){//convertir un int dans une base et retourne le string de celui-ci
+	if len(base)<2 || !uniquealphaandnosigne(base){
+		fmt.Print("NV")	
+	}else if base=="0123456789"{
+		fmt.Print(n)
+	}else{
+		str:=""
+		if n<0{
+			n=-n
+			str=Concat(str,"-")
 		}
-		i = n - 1
-		for tab[0] < max[0] {
-			if tab[i] != max[i] {
-				show(n, tab, max)
-				tab[i]++
-			}
-			if tab[i] == max[i] {
-				if tab[i-1] != max[i-1] {
-					show(n, tab, max)
-					tab[i-1]++
-					j = i
-					for j < n {
-						tab[j] = tab[j-1] + 1
-						j++
-					}
-					i = n - 1
-				}
-			}
-			for tab[i] == max[i] && tab[i-1] == max[i-1] && i > 1 {
-				i--
-			}
+		ch:=basen(n,len(base))
+		for _,val:= range ch{
+			num,_:=strconv.Atoi(string(val))
+			str=Concat(str,string(base[num]))
 		}
-		show(n, tab, max)
+		fmt.Print(str)
 	}
-	z01.PrintRune('\n')
+}
+
+func uniquealphaandnosigne(s string) bool{//verifier si une chaine contient que des caractères unique et pas de signe- ou +
+	for i,val1:=range s{
+		if val1== 43|| val1== 45{//pour les signe - et +
+			return false		
+		}
+		for j:=i+1;j<len(s);j++{
+			if string(val1)==string(s[j]){
+				return false
+			}
+		}	
+	}
+	return true
+}
+
+func basen(nb,n int) []string{// pour convertir un nombre dans une base n
+	var cr []string
+	var c []string
+	if nb<0{
+		nb=-nb
+		c=append(c,"-")
+	}
+	re:=0
+	div:=0
+	DivMod(nb, n, &div, &re)
+	for div>0{	
+		DivMod(nb, n, &div, &re)
+		cr=append(cr,strconv.Itoa(re))
+		nb=div
+	}
+	i:=len(cr)-1
+	for 0<=i{
+		c=append(c,string(cr[i]))
+		i--	
+	}
+	return c
 }
